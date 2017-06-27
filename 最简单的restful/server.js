@@ -64,7 +64,7 @@ res.json(body);
 	res.json(body);
 });
 
-// DELET 操作
+// DELET 操作 找到然后删除 优化版本
 app.delete('/dataBase/:id', function (req, res) {
 	var id = parseInt(req.params.id,10);
 	var Findtarget;
@@ -85,6 +85,51 @@ app.delete('/dataBase/:id', function (req, res) {
 	}
 
 });
+
+// PUT /dataBase
+app.put('/dataBase/:id',function (req,res) {
+	//首先拿到 input的 内容；
+		var body = req.body;
+		var vaildAtrribute = {};
+		var Findtarget;
+	/*更新的步骤，首先要 判断 他是不是有这个属性
+			1.如果有这个属性 and  这个属性的类型是正确的 那么我们可以更改，
+			2.如果有这个属性，but 这个属性的类型是不正确的， 那么油门输出bad
+			3.如果这里面都没有这个属性的话，输出bad request。
+	*/
+
+	if(body.hasOwnProperty('completed') && typeof body.completed === "boolean"){
+		vaildAtrribute.completed = body.completed;
+	} else if(body.hasOwnProperty('completed')) {
+		res.send('bad params in the request');
+	}
+
+	if(body.hasOwnProperty('description') && typeof body.description === 'string' && body.description.trim().length > 0){
+		vaildAtrribute.description = body.description;
+	} else if(body.hasOwnProperty('description')) {
+			return res.status(400).send();
+	}
+
+	//find the object 如果存在的话更新他，如果不存在的话，抛出错误
+	var id = parseInt(req.params.id,10);
+
+
+ for(var i = 0; i < dataBase.length; i++) {
+	 if(dataBase[i].id === id) {
+		 Findtarget = true;
+		 vaildAtrribute.id = id;
+		 dataBase[i] = vaildAtrribute;
+		 break;
+	 }
+ }
+
+	if(Findtarget){
+		res.json(dataBase);
+	} else{
+		res.status(404).send();
+	}
+});
+
 
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT + '!');
