@@ -56,22 +56,35 @@ app.post('/dataBase', function (req, res) {
 
 console.log('description' + body.description);
 res.json(body);
-
 	// add id field
 	body.id = dataBase.length + 1;
-
-	// push body into array
+	// push body into database
 	dataBase.push(body);
-
+	//发送给前面调用你的人。
 	res.json(body);
-
 });
 
+// DELET 操作
+app.delete('/dataBase/:id', function (req, res) {
+	var id = parseInt(req.params.id,10);
+	var Findtarget;
 
 
+ for(var i = 0; i < dataBase.length; i++) {
+	 if(dataBase[i].id === id) {
+		 Findtarget = dataBase[i];
+		 dataBase.splice(i,1);
+		 break;
+	 }
+ }
 
+	if(Findtarget){
+		res.json(dataBase);
+	} else{
+		res.status(404).send();
+	}
 
-
+});
 
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT + '!');
