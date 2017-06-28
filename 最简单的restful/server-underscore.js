@@ -3,8 +3,22 @@ var bodyParser = require('body-parser');
 var _ = require('underscore');
 
 var app = express();
-var PORT = process.env.PORT || 3000;
-var todos = [];
+var PORT = process.env.PORT || 8080;
+var todos = [
+	{
+		id: 1,
+		description: 'Meet mom for lunch',
+		completed: false
+	}, {
+		id: 2,
+		description: 'Go to market',
+		completed: true
+	}, {
+		id: 3,
+		description: 'Feed the cat',
+		completed: true
+	}
+];
 var todoNextId = 1;
 
 app.use(bodyParser.json());
@@ -53,11 +67,11 @@ app.post('/todos', function (req, res) {
 		return res.status(400).send();
 	}
 
-	body.description = body.description.trim();	
+	body.description = body.description.trim();
 	body.id = todoNextId++;
 
 	todos.push(body);
-	
+
 	res.json(body);
 });
 
@@ -104,21 +118,3 @@ app.put('/todos/:id', function (req, res) {
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT + '!');
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
