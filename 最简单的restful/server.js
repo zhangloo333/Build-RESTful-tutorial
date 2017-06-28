@@ -13,7 +13,7 @@ var dataBase = [{
 }, {
 	id: 2,
 	description: 'Go to market',
-	completed: false
+	completed: true
 }, {
 	id: 3,
 	description: 'Feed the cat',
@@ -31,6 +31,7 @@ app.get('/dataBase', function (req, res) {
 	var filterDataBase = []
 	var flag = false;
 
+	// GET 添加查询的params http://localhost:8080/dataBase?completed=false
 	if(queryParamas.hasOwnProperty('completed') && queryParamas.completed === 'true') {
 			dataBase.forEach(function (e) {
 					if(e.completed === true){
@@ -47,7 +48,19 @@ app.get('/dataBase', function (req, res) {
 		 flag = true;
 	}
 
+	//GET 添加符合条件的q的params
+	if(queryParamas.hasOwnProperty('q') && queryParamas.q.length > 0) {
+		dataBase.forEach(function (e) {
+			if(e.description.toLowerCase().indexOf(queryParamas.q.toLowerCase()) > -1){
+				filterDataBase.push(e);
+			}
+		})
+		flag = true;
+	}
 
+
+
+	//输出 符合条件的params
 	if(flag){
 		res.json(filterDataBase);
 	} else {
@@ -160,9 +173,7 @@ app.put('/dataBase/:id',function (req,res) {
 
 /* query paramer ?之后的都是query paremter  ?key=value
 多个query parameter 用 &连接 ？key = value&a=b&completed=true
-
 */
-
 
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT + '!');
