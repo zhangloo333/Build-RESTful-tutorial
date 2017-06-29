@@ -33,3 +33,26 @@
     });
 
     ```
+- 我们要把 data 存入数据库
+  * sequelize.sync().then()
+  * .then()的方程里面写入 你要存的 数据
+  * Todo.create({数据}) Todo 是数据模型， creat是指令，{}里面是数据元
+
+    ```javascript
+
+    sequelize.sync({force: true}).then(function () {
+  	console.log('Everything is synced');
+
+  	Todo.create({
+  		description: 'Walking my dog',
+  		completed: false
+  	}).then(function (todo) {
+  		console.log('Finished!');
+  		console.log(todo);
+  	});
+  });
+  ```
+- force(true) 每次刷新的时候强制 database 把以前的 数据给清洗掉
+  create table if they are not exist.
+- sqlitebrowser gui的软件，可以试试查询
+  * 下载database 软件直接下载。 就行就是一个能看到data 数据的软件。
