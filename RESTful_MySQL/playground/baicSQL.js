@@ -6,10 +6,15 @@ var sequelize = new Sequelize(undefined, undefined, undefined, {
 
 var Todo = sequelize.define('todo', {
   description:{
-    type:Sequelize.STRING
+    type:Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      len: [1,250]
+    }
   },
   completed:{
-    type:Sequelize.BOOLEAN
+    type:Sequelize.BOOLEAN,
+    allowNull: false,
   }
 });
 
@@ -17,11 +22,13 @@ sequelize.sync({force: true}).then(function() {
   console.log('Everything is synced');
   // add data to database, 以后data 就可以从restful api 进入数据库
   Todo.create({
-    description: 'walking on dog',
+    description: "I need walking today",
     completed: false
   }).then(function (todo) {
     console.log('Finished');
     console.log(todo);
+  }).catch(function(e) {
+    console.log(e);
   })
 
 
