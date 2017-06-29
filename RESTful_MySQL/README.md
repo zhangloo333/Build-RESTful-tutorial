@@ -51,8 +51,14 @@
   		console.log(todo);
   	});
   });
+
   ```
 - force(true) 每次刷新的时候强制 database 把以前的 数据给清洗掉
   create table if they are not exist.
 - sqlitebrowser gui的软件，可以试试查询
   * 下载database 软件直接下载。 就行就是一个能看到data 数据的软件。
+- 在promise chain 里面可以生成新的promise 来保证这个继续下去。
+  then(function(paras))里面的paras 就是上一次promise的return的结果。
+  
+
+## 怎么通过网络的接口，把数据从database server 里面读出来。
