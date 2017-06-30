@@ -22,22 +22,32 @@ app.get('/todos', function(req, res) {
 
 	if(query.hasOwnProperty('completed') && query.completed === 'true'){
 		where.completed = true;
-	} else if(query.hasOwnProperty('completed') && query.completed === ' false'){
+	} else if(query.hasOwnProperty('completed') && query.completed === 'false'){
 		where.completed = false;
 	}
 
-	if(query.hasOwnProperty('q') && query.q.length > 0){
-		where.discription = {
+//是 description 而不是 discription
+	if(query.hasOwnProperty('q') && query.q.length > 0) {
+		where.description = {
 			$like: '%' + query.q + '%'
-		}
+		};
 	}
 
-	db.todo.findAll({where: where}).then(function(todos){
-		//findAll 的关键词别打错了
+		db.todo.findAll({where: where}).then(function (todos) {
 			res.json(todos);
-	},function(e){
-		res.status(500).send();
-	});
+		}, function (e) {
+			res.status(500).send();
+		});
+
+
+
+	//
+	// db.todo.findAll({where: where}).then(function(todos){
+	// 	//findAll 的关键词别打错了
+	// 		res.json(todos);
+	// },function(e){
+	// 	res.status(500).send();
+	// });
 
 	// old 的方法
 	// var filteredTodos = todos;
