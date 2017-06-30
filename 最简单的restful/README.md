@@ -1,56 +1,33 @@
 # 最简单的restful api
+- 首先你先把express给保存下来
 
-## POST操作
-- 首先用post的关键词, 事先定义好的 post的 link http://localhost:8080/dataBase/
- * post keyword
- * head: Content-Type : application/json
- * Body: 传入一个json数据
-```javascript
-{
-	"description": "My First Post",
-	"completed": false
-}
+## DELET操作
+- Client 发送request请求 DELET http://localhost:8080/dataBase/2
+- 首先把 query.params里面的id转换成 integer
+- 然后我们从database 里面找到这个 id 对应的object
+- 如果找到了，删除，之后在重新发送出去。
 
-POST http://localhost:8080/dataBase/
-head Content-Type : application/json
-Body  {
-	"description": "My First Post",
-	"completed": false
-}
-```
-
-- 然后用传入的data 被 req.body 接受
-```javascript
-var body = req.body;
-console.log('description' + body.description);
-```
-- 然后把receive的数据 req.body 添加一个id属性, 并且查看数据库的长度在加1(用body.id 添加1 来增加current的index)
-```javascript
-var body = req.body;
-body.id = dataBase.length + 1;
-```
-- 最后把receive 的数据 推入database，然后当更新的元素，
-```javascript
-// push body into array
-dataBase.push(body);
-res.json(body);
-```
-- 然后把res.json(body)把这个给发送除去
 
 ```javascript
-app.post('/dataBase', function (req, res) {
-	var body = req.body;
+// DELET 操作
+app.delete('/dataBase/:id', function (req, res) {
+	var id = parseInt(req.params.id,10);
+	var Findtarget;
 
-console.log('description' + body.description);
-res.json(body);
 
-	// add id field
-	body.id = dataBase.length + 1;
+ for(var i = 0; i < dataBase.length; i++) {
+	 if(dataBase[i].id === id) {
+		 Findtarget = dataBase[i];
+		 dataBase.splice(i,1);
+		 break;
+	 }
+ }
 
-	// push body into array
-	dataBase.push(body);
-
-	res.json(body);
+	if(Findtarget){
+		res.json(dataBase);
+	} else{
+		res.status(404).send();
+	}
 
 });
 ```
