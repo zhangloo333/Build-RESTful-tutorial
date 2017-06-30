@@ -1,9 +1,9 @@
 # PUT 操作
 
 - client do request
-  PUT http://localhost:8080/dataBase/3
-  header:Content-Type : application/json
-  Body: 需要修改的内容
+  * PUT http://localhost:8080/dataBase/3
+  * header:Content-Type : application/json
+  * Body: 需要修改的内容
   ```javascript
   {
   	"description": "this is put request",
@@ -11,8 +11,8 @@
   }
   ```
 - 首先接受request的内容
-  id： 首先从string 转换成 integer
-  body： req.body 把 需要的body 内容保存起来
+  * id： 首先从string 转换成 integer
+  * body： req.body 把 需要的body 内容保存起来
 
 ```javascript
 var body = req.body;
