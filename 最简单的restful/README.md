@@ -1,36 +1,33 @@
-# Build-RESTful-tutorial
-
-## 最基本的写法
-
-- REST 基本流程
-  * 收到 request
-  * server 查询 对应的 function ,then do action
-  * req-request, res-response
-  * res.send(String: content);
-    res.json(data-back-client);
-    向client browser 发送回查询的结果
-
-- 我们在browser端 do request http://localhost:3000/
-  我们 define domain/啥也没有，我们send define content back to client
-  ```javascript
-  app.get('/', function (req, res) {
-  	res.send('Todo API Root');
-  });
-
-  ```
-  * http://localhost:3000/hello or http://localhost:3000/todos
-    server 收到指令，查询相应的function do action
-    hello or todos 可以任意定义, 一下结果都是一样的。
-    todos 是定义在 server 里面的数据库
+# 最简单的restful api
+- 首先你先把express给保存下来
+- 然后你要res的内容保存下来，用res.send() 或者是 res.json()给送出去。
+- 通过查询某个id，来查找数据库 里面的 的object的内容
+  * client request server 通过id
+    然后在把id从request里面拉出来；http://localhost:8080/dataBase/1
+    http://localhost:8080/dataBase/id
+  * 然后在你的数据库里面查询id 相应的object
+    + 所有端口后面的 strings 都保存params{}里面。
+    + 把string 转换成 integer
+    + 遍历找到相应的，保存下来输出
+    + res.json()输出
+       
     ```javascript
-    app.get('/hello', function (req, res) {
-    	res.json(todos);
+    // GET /dataBase/:id 第而部分
+    app.get('/dataBase/:id', function (req, res) {
+    	var id = parseInt(req.params.id,10);
+    	var outstream;
+
+    	dataBase.forEach(function (e) {
+    		if(e.id === id) {
+    			outstream = e;
+    		}
+    	})
+
+    	if(outstream){
+    		res.json(outstream);
+    	} else {
+    		res.status(404).send();
+    	}
     });
-
-    // GET /todos
-    app.get('/todos', function (req, res) {
-    	res.json(todos);
-    });
-
-
     ```
+  * 查到之后用json送出去，或者用status(404).send()送出去;
