@@ -16,31 +16,72 @@ app.get('/', function(req, res) {
 
 // GET /todos?completed=false&q=work
 app.get('/todos', function(req, res) {
-	var queryParams = req.query;
-	var filteredTodos = todos;
+	var query = req.query;
+	var where = {};
 
-	if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-		filteredTodos = _.where(filteredTodos, {
-			completed: true
-		});
-	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-		filteredTodos = _.where(filteredTodos, {
-			completed: false
-		});
+	if(query.hasOwnProperty('completed') && query.completed === 'true'){
+		where.completed = true;
+	} else if(query.hasOwnProperty('completed') && query.completed === ' false'){
+		where.completed = false;
 	}
 
-	if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
-		filteredTodos = _.filter(filteredTodos, function(todo) {
-			return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-		});
+	if(query.hasOwnProperty('q') && query.q.length > 0){
+		where.discription = {
+			$like: '%' + query.q + '%'
+		}
 	}
 
-	res.json(filteredTodos);
+	db.todo.finnAll({
+		where: where
+	}).then(function(todos){
+			res.json(todos);// toJSON() 是一个方程，不是一个函数
+	},function(e){
+		res.status(500).send();
+	});
+
+
+
+	// var filteredTodos = todos;
+	//
+	// if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
+	// 	filteredTodos = _.where(filteredTodos, {
+	// 		completed: true
+	// 	});
+	// } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
+	// 	filteredTodos = _.where(filteredTodos, {
+	// 		completed: false
+	// 	});
+	// }
+	//
+	// if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
+	// 	filteredTodos = _.filter(filteredTodos, function(todo) {
+	// 		return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+	// 	});
+	// }
+	//
+	// res.json(filteredTodos);
+
+
 });
 
 // GET /todos/:id
 app.get('/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
+	/*以前我们使用的_.findwhere找到array里面的数字，
+		现在可以sequelize 里面的方法来做database.findById()
+	*/
+
+	db.todo.findById(todoId).then(function(todo){
+		if(!!todo) {
+			res.json(todo.toJSON());// toJSON() 是一个方程，不是一个函数
+		} else {
+			res.status(404).send();
+		}
+	},function(e){
+		res.status(500).send();
+	});
+
+	/* //old code
 	var matchedTodo = _.findWhere(todos, {
 		id: todoId
 	});
@@ -50,6 +91,8 @@ app.get('/todos/:id', function(req, res) {
 	} else {
 		res.status(404).send();
 	}
+*/
+
 });
 
 // POST /todos
@@ -66,10 +109,6 @@ app.post('/todos', function(req, res) {
     res.status(400).json(e);
   })
 
-
-
-
-  //
 	// if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
 	// 	return res.status(400).send();
 	// }
