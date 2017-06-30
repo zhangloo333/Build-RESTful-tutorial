@@ -16,6 +16,7 @@ app.get('/', function(req, res) {
 
 // GET /todos?completed=false&q=work
 app.get('/todos', function(req, res) {
+
 	var query = req.query;
 	var where = {};
 
@@ -31,16 +32,14 @@ app.get('/todos', function(req, res) {
 		}
 	}
 
-	db.todo.finnAll({
-		where: where
-	}).then(function(todos){
-			res.json(todos);// toJSON() 是一个方程，不是一个函数
+	db.todo.findAll({where: where}).then(function(todos){
+		//findAll 的关键词别打错了
+			res.json(todos);
 	},function(e){
 		res.status(500).send();
 	});
 
-
-
+	// old 的方法
 	// var filteredTodos = todos;
 	//
 	// if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
