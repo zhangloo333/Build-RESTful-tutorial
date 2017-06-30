@@ -35,7 +35,7 @@ if(body.hasOwnProperty('description') && typeof body.description === 'string' &&
     return res.status(400).send();
 }
 ```
-- 在验证合法之后，我们就可以在数据库中查找，
+- 在验证合法之后，我们就可以在数据库中查找，查找之后到了，替换数据库里面的内容
 ```javascript
 for(var i = 0; i < dataBase.length; i++) {
   if(dataBase[i].id === id) {
@@ -47,7 +47,7 @@ for(var i = 0; i < dataBase.length; i++) {
 }
 ```
 
-- 查找之后到了，替换数据库里面的内容
+- 把新的database 里面的结构发送回去
 ```javascript
 if(Findtarget){
   res.json(dataBase);
