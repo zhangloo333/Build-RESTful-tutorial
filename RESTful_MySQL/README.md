@@ -59,6 +59,19 @@
   * 下载database 软件直接下载。 就行就是一个能看到data 数据的软件。
 - 在promise chain 里面可以生成新的promise 来保证这个继续下去。
   then(function(paras))里面的paras 就是上一次promise的return的结果。
-  
 
+- 添加 data单元，用Todo.create({})
+- 查找 用单元，DataBase.findById();
+- 查找所有符合条件的： DataBase.findAll({
+  })
+  * DataBase.findAll({
+    where: {
+      查某个属性： 
+    }
+    })
 ## 怎么通过网络的接口，把数据从database server 里面读出来。
+
+- create a data folder, with keep file 一面一些系统不支持空的文件夹。
+ 这个folder是用来储存我们的database的
+ - db.js load modules into seuqelize. and return database with server connection.
+ - server js do request from database db.js
