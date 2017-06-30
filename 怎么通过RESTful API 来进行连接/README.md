@@ -84,7 +84,7 @@ app.post('/todos', function(req, res) {
     console.log(todo.toJSON);
   }, function(e) {
     res.status(400).json(e);
-  })
+  })})
 
 ```
 
