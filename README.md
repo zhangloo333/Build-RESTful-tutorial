@@ -85,3 +85,28 @@ app.get('/dataBase', function (req, res) {
 	}
 });
 ```
+
+# 添加query的优化版本 see server-underscore.js
+- 首先通过引用 server-underscore来丰富
+
+```javascript
+var express = require('express');
+var bodyParser = require('body-parser');
+var _ = require('underscore');
+```
+
+- 用到underscore的 _.where(list, properties) --
+此函数会自动查找list里面的 有符合条件的函数，然后把他保存在return的list里面
+```javascript
+_.where(listOfPlays, {author: "Shakespeare", year: 1611});
+```
+- 用到underscore的 _.filter(list, function) --
+遍历这个list然后，如果可以 在function里面符合条件为true返回return array里面
+```javascript
+if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
+		filteredTodos = _.filter(filteredTodos, function (todo) {
+			return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+		});
+	}
+```
+- 最后返回这个filter-set
