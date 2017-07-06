@@ -26,8 +26,35 @@ app.get('/', function (req, res) {
 
 // GET /dataBase
 app.get('/dataBase', function (req, res) {
-	res.json(dataBase);
+	/*add the query parameter*/
+	var queryParamas = req.query;
+	var filterDataBase = []
+	var flag = false;
+
+	if(queryParamas.hasOwnProperty('completed') && queryParamas.completed === 'true') {
+			dataBase.forEach(function (e) {
+					if(e.completed === true){
+							filterDataBase.push(e);
+						}
+		})
+			 flag = true;
+	} else if(queryParamas.hasOwnProperty('completed') && queryParamas.completed == 'false'){
+		dataBase.forEach(function (e) {
+				if(e.completed === false){
+						filterDataBase.push(e);
+					}
+	})
+		 flag = true;
+	}
+
+
+	if(flag){
+		res.json(filterDataBase);
+	} else {
+		res.json(dataBase);
+	}
 });
+
 
 // GET /dataBase/:id 第而部分
 app.get('/dataBase/:id', function (req, res) {
@@ -86,7 +113,7 @@ app.delete('/dataBase/:id', function (req, res) {
 
 });
 
-// PUT /dataBase
+// PUT /dataBase, 如果你上传了一个 value类型的argument
 app.put('/dataBase/:id',function (req,res) {
 	//首先拿到 input的 内容；
 		var body = req.body;
@@ -128,7 +155,13 @@ app.put('/dataBase/:id',function (req,res) {
 	} else{
 		res.status(404).send();
 	}
+
 });
+
+/* query paramer ?之后的都是query paremter  ?key=value
+多个query parameter 用 &连接 ？key = value&a=b&completed=true
+
+*/
 
 
 app.listen(PORT, function () {
