@@ -1,15 +1,87 @@
-# 最简单的restful api
-- 首先你先把express给保存下来
-## GET操作
-- 然后你要res的内容保存下来，用res.send() 或者是 res.json()给送出去。
-- 找查询某个id的object的内容
-  * 然后在把id从request里面拉出来；
-  * 然后在你的数据库里面查询id 相应的object
-  * 查到之后用json送出去，或者用status(404).send()送出去;
+# GET 添加 query的操作
+- 首先在 GET 的 url 里面其实明没有添加什么参数 GET http://localhost:8080/database
 
-## POST操作
-- 首先用post的关键词找到database post '/database-Name'
-- 然后用req.body来代指整个curret传入的data，
-- 然后用body.id 添加1 来增加current的index
-- 最后把database-Name 推入当前更新的元素，
-- 然后把res.json(body)把这个给发送除去
+```javascript
+app.get('/dataBase', function (req, res)
+```
+
+- Query这个parameter就保存在 response的query里面 ？之后的都会保存在query paremeter里面 --
+
+query paramer ?之后的都是query paremter  ?key=value
+多个query parameter 用 &连接 ？key = value&a=b&completed=true
+
+http://localhost:8080/database?completed=true
+
+
+- 首先 提取 query 里面的内容 --
+  建议一个属于 filter-set，--
+  然后建立一个flag，如果有找到符合条件的，就输出filter-set，没有就输出所有的database的元素。
+
+
+  ```javascript
+  var queryParamas = req.query;
+  var filterDataBase = []
+  var flag = false;
+  ```
+
+- 进行query的时候，首先要验证query是否合法，
+
+```javascript
+if(queryParamas.hasOwnProperty('completed') && queryParamas.completed === 'true')
+
+```
+
+```javascript
+if(queryParamas.hasOwnProperty('completed') && queryParamas.completed === 'true') {
+    dataBase.forEach(function (e) {
+        if(e.completed === true){
+            filterDataBase.push(e);
+          }
+  })
+     flag = true;
+} else if(queryParamas.hasOwnProperty('completed') && queryParamas.completed == 'false'){
+  dataBase.forEach(function (e) {
+      if(e.completed === false){
+          filterDataBase.push(e);
+        }
+})
+   flag = true;
+}
+```
+
+- 如果合法的条件下，就要循环database里面查找 符合query key === value的元素。如果找到了加入 filter set里面，如果没有找到，就不添加到这个新的set里面
+
+- 然后输出就行了。sd
+
+
+```javascript
+app.get('/dataBase', function (req, res) {
+	/*add the query parameter*/
+	var queryParamas = req.query;
+	var filterDataBase = []
+	var flag = false;
+
+	if(queryParamas.hasOwnProperty('completed') && queryParamas.completed === 'true') {
+			dataBase.forEach(function (e) {
+					if(e.completed === true){
+							filterDataBase.push(e);
+						}
+		})
+			 flag = true;
+	} else if(queryParamas.hasOwnProperty('completed') && queryParamas.completed == 'false'){
+		dataBase.forEach(function (e) {
+				if(e.completed === false){
+						filterDataBase.push(e);
+					}
+	})
+		 flag = true;
+	}
+
+
+	if(flag){
+		res.json(filterDataBase);
+	} else {
+		res.json(dataBase);
+	}
+});
+```
